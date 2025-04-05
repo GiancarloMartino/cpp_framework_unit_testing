@@ -1,3 +1,11 @@
+# Controlla i parametri
+param (
+    [switch]$Watch,
+    [switch]$Clean,
+    [switch]$CompileCommands,
+    [switch]$RebuildAll
+)
+
 function Check-Command($command) {
     $null -ne (Get-Command $command -ErrorAction SilentlyContinue)
 }
@@ -174,14 +182,6 @@ function Watch-ForChanges {
 
 # Punto di ingresso principale dello script
 
-# Controlla i parametri
-param (
-    [switch]$Watch,
-    [switch]$Clean,
-    [switch]$CompileCommands,
-    [switch]$RebuildAll
-)
-
 # Controllo dei prerequisiti
 if (-not (Check-Prerequisites)) {
     exit 1
@@ -205,14 +205,14 @@ $buildSuccess = Build-Project -ForceRebuild:$RebuildAll -GenerateCompileCommands
 # Se la build ha avuto successo, esegui i test
 if ($buildSuccess) {
     Run-Tests
-    
-    # Crea un link al file compile_commands.json se richiesto
-    if ($CompileCommands) {
-        Create-CompileCommandsLink
-    }
 }
 
 # Se richiesto, passa alla modalità watch
 if ($Watch -and $buildSuccess) {
     Watch-ForChanges
+}
+
+# Se richiesto, compila i comandi in json
+if ($CompileCommands -and $buildSuccess) {
+    Create-CompileCommandsLink
 }

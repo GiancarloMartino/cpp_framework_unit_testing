@@ -1,3 +1,11 @@
+# Controlla i parametri
+param (
+    [switch]$Watch,
+    [switch]$Clean,
+    [switch]$CompileCommands,
+    [switch]$RebuildAll
+)
+
 function Check-Command($command) {
     $null -ne (Get-Command $command -ErrorAction SilentlyContinue)
 }
@@ -173,14 +181,6 @@ function Watch-ForChanges {
 }
 
 # Punto di ingresso principale dello script
-
-# Controlla i parametri
-param (
-    [switch]$Watch,
-    [switch]$Clean,
-    [switch]$CompileCommands,
-    [switch]$RebuildAll
-)
 
 # Controllo dei prerequisiti
 if (-not (Check-Prerequisites)) {
